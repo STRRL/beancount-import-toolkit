@@ -5,6 +5,7 @@ import useDebounce from 'react-use/lib/useDebounce'
 import { cmbTawTxn2Txn, parseCMBRawTxn } from '../components/cmb'
 import { Rule } from '../components/cmb/convert'
 import NewRuleModal from '../components/new-rule-modal'
+import RuleImportModal from '../components/rule-import-modal'
 import { renderTxn } from '../components/txn'
 
 type RawTxn = {
@@ -28,6 +29,11 @@ export default function Home() {
 
   const [ruleEditMode, setRuleEditMode] = useState(false)
   const [ruleIndexForEdit, setRuleIndexForEdit] = useState(-1)
+
+  const [rulesModalMode, setRulesModalMode] = useState<'import-rules' | 'export-rules'>('import-rules')
+  const [exportedRuleText, setExportedRuleText] = useState('')
+  const [rulesModalOpen, setRulesModalOpen] = useState(false)
+
 
   const parsedTxns = useMemo(() => {
     const cmbRawTxns = parseCMBRawTxn(debouncedText)
@@ -54,7 +60,7 @@ export default function Home() {
       <main className='container flex h-screen bg-gray-200 mx-auto'>
         <div className='w-1/2 flex flex-col'>
           <div className='flex-none w-full h-1/2 p-4'>
-            <textarea className='textarea w-full h-full'
+            <textarea className='textarea textarea-primary w-full h-full'
               value={rawText}
               onChange={(e) => setRawText(e.target.value)}
             ></textarea>
@@ -66,10 +72,13 @@ export default function Home() {
               setNewRuleModalOpen(true);
             }}>Add</button>
             <button className='btn mx-2' onClick={() => {
-              JSON.stringify(rules)
+              setRulesModalMode('import-rules')
+              setRulesModalOpen(true);
             }}>Import</button>
             <button className='btn mx-2' onClick={() => {
-              console.log(JSON.stringify(rules))
+              setExportedRuleText(JSON.stringify(rules))
+              setRulesModalMode('export-rules')
+              setRulesModalOpen(true);
             }}>Export</button>
           </div>
 
@@ -147,7 +156,7 @@ export default function Home() {
               placeholder='<Your-Account-Name>'
             ></input>
           </div>
-          <textarea className='textarea w-full flex-1'
+          <textarea className='textarea textarea-primary w-full flex-1'
             readOnly
             value={renderedBeancounts}
           ></textarea>
@@ -179,6 +188,18 @@ export default function Home() {
         ruleIndexForEdit={ruleIndexForEdit}
       ></NewRuleModal>
 
+      <RuleImportModal
+        exportedRuleText={exportedRuleText}
+        showModal={rulesModalOpen}
+        mode={rulesModalMode}
+        onImportRules={(rules: Rule[]) => {
+          setRules(rules);
+          setRulesModalOpen(false);
+        }}
+        onCancel={() => {
+          setRulesModalOpen(false);
+        }}
+      ></RuleImportModal>
     </div>
   )
 }

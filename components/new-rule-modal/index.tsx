@@ -66,7 +66,7 @@ export default function NewRuleModal(
         , [props.editMode, props.rule])
     return (
         <div>
-            <input type="checkbox" id="new-rule-modal" className="modal-toggle" checked={props.showModal} />
+            <input type="checkbox" id="new-rule-modal" className="modal-toggle" checked={props.showModal} onChange={(e) => { }} />
             <div className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Create New Rule</h3>
