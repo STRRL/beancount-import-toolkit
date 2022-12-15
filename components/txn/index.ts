@@ -12,13 +12,15 @@ export type Txn = {
     payee: string;
     narration: string;
     postings: Posting[];
-    comment?: string;
+    comments?: string[];
 }
 
 export function renderTxn(txn: Txn) {
     let result = '';
-    if (txn.comment){
-        result += `; ${txn.comment}\n`
+    if (txn.comments && txn.comments.length > 0) {
+        for (const comment of txn.comments) {
+            result += `; ${comment}\n`
+        }
     }
     result += `${txn.date} ${txn.completed ? '*' : '!'} "${txn.payee}" "${txn.narration}"\n`
     for (const posting of txn.postings) {
@@ -30,7 +32,7 @@ export function renderTxn(txn: Txn) {
 
 function renderPosting(posting: Posting) {
     let result = '';
-    result +=`${posting.account}`
+    result += `${posting.account}`
     if (posting.amount && posting.commodity) {
         result += ` ${posting.amount} ${posting.commodity}`
     }

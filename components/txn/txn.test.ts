@@ -19,7 +19,7 @@ describe('render txn', () => {
       narration: 'narration',
       payee: 'payee',
       postings: [],
-      comment: 'comment',
+      comments: ['comment'],
     })
     expect(result).toBe(`; comment
 2021-01-01 * "payee" "narration"

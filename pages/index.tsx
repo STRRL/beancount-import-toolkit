@@ -1,6 +1,9 @@
 import Head from 'next/head'
 import { useMemo, useState } from 'react'
+import { render } from 'react-dom'
 import useDebounce from 'react-use/lib/useDebounce'
+import { cmbTawTxn2Txn, parseCMBRawTxn } from '../components/cmb'
+import { renderTxn } from '../components/txn'
 
 type RawTxn = {
   date: string
@@ -20,59 +23,19 @@ export default function Home() {
 
   const [accountName, setAccountName] = useState('')
 
-  const parsedLines = useMemo(() => {
-    const result = [] as string[]
-    let line = "";
-    const lines = debouncedText.split('\n')
-    for (const [index, item] of lines.entries()) {
-      const match = txnReg.test(item)
-      if (match) {
-        if (line) {
-          result.push(line)
-        }
-        line = item
-      } else {
-        line += item
-      }
-      if (index === lines.length - 1) {
-        if (line) {
-          result.push(line)
-        }
-      }
-    }
-    return result
-  }, [debouncedText])
-
   const parsedTxns = useMemo(() => {
-    const result = [] as RawTxn[]
-    for (const line of parsedLines) {
-      const [date, currency, amount, balance, ...description] = line.split(' ')
-      result.push({
-        date,
-        currency,
-        amount,
-        balance,
-        description: description.join(' '),
-        raw: line
-      })
-    }
-    return result
-  }, [parsedLines])
+    const cmbRawTxns = parseCMBRawTxn(debouncedText)
+    return cmbRawTxns.map(txn => cmbTawTxn2Txn(txn, accountName, []))
+
+  }, [accountName, debouncedText])
 
   const renderedBeancounts = useMemo(() => {
-    const result = [] as string[]
-
-    for (const txn of parsedTxns) {
-      const { date, currency, amount, balance, description } = txn
-      result.push(`; ${txn.raw}`)
-      result.push(`${date} ! "${description}"`)
-      result.push(`  ${accountName} ${amount} ${currency}`)
-      result.push(`  Expenses:Unknown`)
-      result.push('')
-    }
-
+    let result = ''
+    parsedTxns.forEach(txn => {
+      result += renderTxn(txn)
+    })
     return result
-  }, [parsedTxns, accountName])
+  }, [parsedTxns])
 
   return (
     <div>
@@ -116,7 +79,7 @@ export default function Home() {
           </div>
           <textarea className='textarea w-full flex-1'
             readOnly
-            value={renderedBeancounts.join('\n')}
+            value={renderedBeancounts}
           ></textarea>
         </div>
       </main>
