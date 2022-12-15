@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useMemo, useState } from 'react'
 import useDebounce from 'react-use/lib/useDebounce'
 
-type Txn = {
+type RawTxn = {
   date: string
   currency: string
   amount: string
@@ -44,7 +44,7 @@ export default function Home() {
   }, [debouncedText])
 
   const parsedTxns = useMemo(() => {
-    const result = [] as Txn[]
+    const result = [] as RawTxn[]
     for (const line of parsedLines) {
       const [date, currency, amount, balance, ...description] = line.split(' ')
       result.push({
@@ -82,30 +82,39 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className='container flex h-screen bg-neutral-200 mx-auto'>
-        <div className='w-1/2 p-4'>
-          <textarea className='w-full h-1/3'
-            value={rawText}
-            onChange={(e) => setRawText(e.target.value)}
-          ></textarea>
-          <textarea className='w-full h-1/3'
-            readOnly
-            value={parsedLines.join('\n')}>
-          </textarea>
-          <textarea className='w-full h-1/3'
-            readOnly
-            value={JSON.stringify(parsedTxns)}>
-          </textarea>
+      <main className='container flex h-screen bg-gray-200 mx-auto'>
+        <div className='w-1/2'>
+          <div className='w-full h-1/2 p-4'>
+            <textarea className='textarea w-full h-full'
+              value={rawText}
+              onChange={(e) => setRawText(e.target.value)}
+            ></textarea>
+          </div>
+          <div className='w-full h-1/2 p-4'>
+            <p>Rules:</p>
+            <div className='cards w-full'>
+              <div className="card bg-slate-50">
+                <div className='card-body'>
+                  <h2 className='card-title'>如果字段 raw 中包含 包笼天下 </h2>
+                  <p>设置 Payee 为 包笼天下</p>
+                  <p>设置 Narration 为 早饭</p>
+                  <p>设置收款账户为 Expenses:CN:生活:饮食:堂食</p>
+                  <p>标记交易为 完成</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
-        <div className='w-1/2 p-4'>
+        <div className='w-1/2 p-4 flex flex-col'>
           <div className='py-2'>
-            <input type="text" className='w-full'
-            value={accountName}
-            onChange={(e) => setAccountName(e.target.value)}
-            placeholder='<Your-Account-Name>'
+            <input type="text" className='input w-full flex-none'
+              value={accountName}
+              onChange={(e) => setAccountName(e.target.value)}
+              placeholder='<Your-Account-Name>'
             ></input>
           </div>
-          <textarea className='w-full h-full'
+          <textarea className='textarea w-full flex-1'
             readOnly
             value={renderedBeancounts.join('\n')}
           ></textarea>
