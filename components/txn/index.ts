@@ -26,6 +26,9 @@ export function renderTxn(txn: Txn) {
     for (const posting of txn.postings) {
         result += "  " + renderPosting(posting) + "\n";
     }
+    if (txn.postings.length == 1) {
+        result += "  Expenses:Unknown\n";
+    }
     result += "\n"
     return result
 }
