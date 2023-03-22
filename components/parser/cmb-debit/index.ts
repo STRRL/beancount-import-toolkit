@@ -1,7 +1,13 @@
-import Txn from "../txn"
+import BeancountTxn from "@/components/beancount"
 import { Rule, ruleApply, ruleMatch } from "./convert"
 
-type CMBRawTxn = {
+export default {};
+
+/**
+ * CMBDebitRawTxn is the raw transaction data from CMB debit card.
+ * One transaction have one corresponding line in the raw PDF.
+ */
+export type CMBDebitRawTxn = {
     date: string
     currency: string
     amount: string
@@ -11,12 +17,11 @@ type CMBRawTxn = {
     raw: string
 }
 
-export default CMBRawTxn;
 
 const txnReg = new RegExp(/^\d{4}-\d{2}-\d{2} CNY [-0-9.,]+ [-0-9.,]+ .*$/)
 
-export function parseCMBRawTxn(text: string): CMBRawTxn[] {
-    const result = [] as CMBRawTxn[]
+export function parseCMBRawTxn(text: string): CMBDebitRawTxn[] {
+    const result = [] as CMBDebitRawTxn[]
     // compose multiline txn to one-line txn
     const lines = [] as string[]
     let line = "";
@@ -52,7 +57,7 @@ export function parseCMBRawTxn(text: string): CMBRawTxn[] {
     return result
 }
 
-export function cmbTawTxn2Txn(rawTxn: CMBRawTxn, cmbAccountName: string, rules?: Rule[]): Txn {
+export function cmbDebitRawTxn2Txn(rawTxn: CMBDebitRawTxn, cmbAccountName: string, rules?: Rule[]): BeancountTxn {
     let txn = {
         date: rawTxn.date,
         completed: false,
@@ -66,7 +71,7 @@ export function cmbTawTxn2Txn(rawTxn: CMBRawTxn, cmbAccountName: string, rules?:
             }
         ],
         comments: [rawTxn.raw]
-    } as Txn
+    } as BeancountTxn
 
     if (rules) {
         for (const rule of rules) {

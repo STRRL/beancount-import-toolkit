@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import CMBRawTxn from '.';
+import { CMBDebitRawTxn } from '.';
 import { Criterion, criterionMatch, Rule, ruleMatch } from './convert';
 
 describe('criterion match', () => {
@@ -11,7 +11,7 @@ describe('criterion match', () => {
             date: '2021-01-01',
             description: '包笼天下',
             raw: '2021-01-01 CNY -10.00 0.00 包笼天下'
-        } as CMBRawTxn
+        } as CMBDebitRawTxn
         const criterion = {
             field: 'raw',
             operator: 'contains',
@@ -28,7 +28,7 @@ describe('criterion match', () => {
             date: '2021-01-01',
             description: '包笼天下',
             raw: '2021-01-01 CNY -10.00 0.00 包笼天下'
-        } as CMBRawTxn
+        } as CMBDebitRawTxn
         const criterion = {
             field: 'description',
             operator: 'contains',
@@ -45,7 +45,7 @@ describe('criterion match', () => {
             date: '2021-01-01',
             description: '包笼天下',
             raw: '2021-01-01 CNY -10.00 0.00 包笼天下'
-        } as CMBRawTxn
+        } as CMBDebitRawTxn
         const criterion = {
             field: 'description',
             operator: 'startsWith',
@@ -64,7 +64,7 @@ describe('rule match', () => {
             date: '2021-01-01',
             description: '包笼天下',
             raw: '2021-01-01 CNY -10.00 0.00 包笼天下'
-        } as CMBRawTxn
+        } as CMBDebitRawTxn
 
         const rule = {
             actions: [],
@@ -88,7 +88,7 @@ describe('rule match', () => {
             date: '2021-01-01',
             description: '包笼天下',
             raw: '2021-01-01 CNY -10.00 0.00 包笼天下'
-        } as CMBRawTxn
+        } as CMBDebitRawTxn
 
         const rule = {
             actions: [],
@@ -112,7 +112,7 @@ describe('rule match', () => {
             date: '2021-01-01',
             description: '包笼天下',
             raw: '2021-01-01 CNY -10.00 0.00 包笼天下'
-        } as CMBRawTxn
+        } as CMBDebitRawTxn
 
         const rule = {
             actions: [],

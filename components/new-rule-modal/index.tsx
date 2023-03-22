@@ -1,5 +1,5 @@
+import { Rule } from "@/components/parser/cmb-debit/convert";
 import { useEffect, useState } from "react";
-import { Rule } from "../cmb/convert";
 
 export default function NewRuleModal(
     props: {

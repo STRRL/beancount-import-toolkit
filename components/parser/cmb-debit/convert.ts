@@ -1,8 +1,8 @@
-import CMBRawTxn from "."
-import Txn from "../txn"
+import BeancountTxn from "@/components/beancount"
+import { CMBDebitRawTxn } from "."
 
 export type Criterion = {
-    field: keyof CMBRawTxn
+    field: keyof CMBDebitRawTxn
     operator: 'contains' | 'equals' | 'notEquals' | 'startsWith' | 'endsWith'
     value: string
 }
@@ -21,9 +21,9 @@ export type Rule = {
     actions: Action[]
 }
 
-export function criterionMatch(criterion: Criterion, cmbRawTxn: CMBRawTxn): boolean {
+export function criterionMatch(criterion: Criterion, cmbRawTxn: CMBDebitRawTxn): boolean {
     let result = true;
-    const fieldValue = cmbRawTxn[criterion.field as keyof CMBRawTxn];
+    const fieldValue = cmbRawTxn[criterion.field as keyof CMBDebitRawTxn];
     switch (criterion.operator) {
         case 'contains':
             result = fieldValue.includes(criterion.value);
@@ -47,7 +47,7 @@ export function criterionMatch(criterion: Criterion, cmbRawTxn: CMBRawTxn): bool
     return result;
 }
 
-export function ruleMatch(rule: Rule, cmbRawTxn: CMBRawTxn): boolean {
+export function ruleMatch(rule: Rule, cmbRawTxn: CMBDebitRawTxn): boolean {
     const result = true;
     for (const criterion of rule.criteria) {
         if (!criterionMatch(criterion, cmbRawTxn)) {
@@ -57,7 +57,7 @@ export function ruleMatch(rule: Rule, cmbRawTxn: CMBRawTxn): boolean {
     return result;
 }
 
-export function ruleApply(rule: Rule, txn: Txn, rawTxn: CMBRawTxn): Txn {
+export function ruleApply(rule: Rule, txn: BeancountTxn, rawTxn: CMBDebitRawTxn): BeancountTxn {
     let result = txn;
     for (const action of rule.actions) {
         if (action.setPayee) {
