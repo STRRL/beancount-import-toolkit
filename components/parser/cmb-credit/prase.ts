@@ -28,6 +28,10 @@ export function parseCMBCreditRawTxn(text: string): CMBCreditRawTxn[] {
         lines.push(item)
     }
 
+    for (const [_, line] of lines.entries()) {
+        result.push(praseOnlineCMBCreditCardTxn(line))
+    }
+
     return result
 }
 
