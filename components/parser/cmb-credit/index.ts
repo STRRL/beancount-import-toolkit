@@ -1,8 +1,6 @@
 import { on } from "events";
 import { CMBDebitRawTxn } from "../cmb-debit";
 
-export default {};
-
 /**
  * CMBCreditRawTxn is the raw transaction data from CMB credit card.
  */
@@ -37,4 +35,8 @@ export type CMBCreditRawTxn = {
      * Eg. "4.00(US)"
      */
     originalAmount: string
+    /**
+     * The raw text of the transaction.
+     */
+    raw: string
 }

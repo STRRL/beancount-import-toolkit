@@ -13,6 +13,7 @@ describe('parse cmb credit statement', () => {
                 postedDate: "11/17",
                 rmbAmount: "28.56",
                 soldDate: "11/15",
+                raw: "11/15 11/17 GITHUB 28.56 0657 4.00(US)",
             } as CMBCreditRawTxn)
         })
         test('prase one line with long description', () => {
@@ -24,6 +25,7 @@ describe('parse cmb credit statement', () => {
                 postedDate: "11/24",
                 rmbAmount: "71.54",
                 soldDate: "11/22",
+                raw: "11/22 11/24 GOOGLE *Google Storage 71.54 0657 9.99(US)",
             } as CMBCreditRawTxn)
         })
     })
@@ -45,6 +47,7 @@ describe('parse cmb credit statement', () => {
                     postedDate: "11/10",
                     rmbAmount: "527.02",
                     soldDate: "11/08",
+                    raw: "11/08 11/10 PLAYSTATION NETWO 527.02 0657 568.00(JP)"
                 }, {
                     cardNo: "0657",
                     description: "GITHUB",
@@ -52,6 +55,7 @@ describe('parse cmb credit statement', () => {
                     postedDate: "11/17",
                     rmbAmount: "28.56",
                     soldDate: "11/15",
+                    raw: "11/15 11/17 GITHUB 28.56 0657 4.00(US)"
                 }, {
                     cardNo: "7178",
                     description: "增值服务使用费-用卡安全保障",
@@ -59,6 +63,7 @@ describe('parse cmb credit statement', () => {
                     postedDate: "12/01",
                     rmbAmount: "5.00",
                     soldDate: "12/01",
+                    raw: "12/01 12/01 增值服务使用费-用卡安全保障 5.00 7178 5.00"
                 }
             ] as CMBCreditRawTxn[])
         })

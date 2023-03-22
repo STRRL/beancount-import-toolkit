@@ -5,7 +5,7 @@ export function parseCMBCreditRawTxn(text: string): CMBCreditRawTxn[] {
 
     const lines = [] as string[]
 
-    for (const [index, item] of text.split('\n').entries()) {
+    for (const [_, item] of text.split('\n').entries()) {
         // drop the empty line
         if (item.trim() === "") {
             continue
@@ -36,8 +36,9 @@ export function parseCMBCreditRawTxn(text: string): CMBCreditRawTxn[] {
 }
 
 export function praseOnlineCMBCreditCardTxn(text: string): CMBCreditRawTxn {
+    const raw = text.trim()
     // separate the text with space
-    const items = text.trim().split(" ")
+    const items = raw.split(" ")
     // first element is sold date
     const soldDate = items[0]
     // second element is posted date
@@ -59,5 +60,6 @@ export function praseOnlineCMBCreditCardTxn(text: string): CMBCreditRawTxn {
         postedDate,
         rmbAmount,
         soldDate,
+        raw
     }
 }
