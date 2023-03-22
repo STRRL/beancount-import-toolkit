@@ -23,10 +23,10 @@ describe('convert cmd credit txn to beancount txn', () => {
             postings: [
                 {
                     account: "Assets:Unknown",
-                    amount: "28.56",
-                    commodity: "CNY",
-                    totalCost: "4.00",
-                    totalCostCommodity: "USD"
+                    amount: "4.00",
+                    commodity : "USD",
+                    totalCost : "28.56",
+                    totalCostCommodity: "CNY",
                 }
             ],
             comments: [

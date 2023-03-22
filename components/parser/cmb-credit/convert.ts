@@ -43,7 +43,10 @@ export function splitAmountAndCommodity(origin: string, nationCommodityMapping: 
                 }
             }
         } else {
-            throw new Error(`Unknown format: ${origin}`)
+            return {
+                amount: `Unknown format: ${origin}`,
+                commodity: ""
+            }
         }
     } else {
         return {
@@ -79,8 +82,10 @@ export function cmbCreditRawTxn2BeancountTxn(origin: CMBCreditRawTxn, accountNam
 
     if (containsForeignCurrency(origin.originalAmount)) {
         const { amount, commodity } = splitAmountAndCommodity(origin.originalAmount, nation2CommodityMapping)
-        result.postings[0].totalCost = amount
-        result.postings[0].totalCostCommodity = commodity
+        result.postings[0].totalCost = origin.rmbAmount
+        result.postings[0].totalCostCommodity = "CNY"
+        result.postings[0].amount = amount
+        result.postings[0].commodity = commodity
     }
     return result
 }

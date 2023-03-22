@@ -1,4 +1,5 @@
 import BeancountTxn from "."
+var _ = require('lodash');
 
 export type Criterion = {
     field: keyof BeancountTxn
@@ -60,7 +61,7 @@ export function ruleMatch(rule: TransformRule, txn: BeancountTxn): boolean {
 
 
 export function ruleApply(rule: TransformRule, txn: BeancountTxn): BeancountTxn {
-    let result = txn;
+    let result = _.cloneDeep(txn);
     for (const action of rule.actions) {
         if (action.setPayee) {
             result.payee = action.setPayee;
@@ -85,6 +86,16 @@ export function ruleApply(rule: TransformRule, txn: BeancountTxn): BeancountTxn 
             } else {
                 result.comments = [action.appendComment];
             }
+        }
+    }
+    return result;
+}
+
+export function transform(txn: BeancountTxn, rules: TransformRule[]): BeancountTxn {
+    let result = txn;
+    for (const rule of rules) {
+        if (ruleMatch(rule, txn)) {
+            result = ruleApply(rule, result);
         }
     }
     return result;

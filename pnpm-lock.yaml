@@ -14,6 +14,7 @@ specifiers:
   eslint-config-next: 13.0.6
   jest: ^29.3.1
   jest-environment-jsdom: ^29.3.1
+  lodash: ^4.17.21
   next: 13.0.6
   postcss: ^8.4.20
   react: 18.2.0
@@ -29,6 +30,7 @@ dependencies:
   daisyui: 2.43.2_r4gnkvssmvyxmi2wmat5xbx36a
   eslint: 8.29.0
   eslint-config-next: 13.0.6_ha6vam6werchizxrnqvarmz2zu
+  lodash: 4.17.21
   next: 13.0.6_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -3517,7 +3519,6 @@ packages:
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /loose-envify/1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}

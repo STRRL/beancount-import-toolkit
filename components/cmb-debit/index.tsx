@@ -20,15 +20,15 @@ type RawTxn = {
 export default function CMBDebit() {
   const [rawText, setRawText] = useState('')
   const [debouncedText, setDebouncedText] = useState('')
-  const [newRuleModalOpen, setNewRuleModalOpen] = useState(false)
   useDebounce(() => { setDebouncedText(rawText) }, 200, [rawText])
-  const [rules, setRules] = useState<TransformRule[]>([])
 
   const [accountName, setAccountName] = useState('')
 
+  const [rules, setRules] = useState<TransformRule[]>([])
   const [ruleEditMode, setRuleEditMode] = useState(false)
   const [ruleIndexForEdit, setRuleIndexForEdit] = useState(-1)
 
+  const [newRuleModalOpen, setNewRuleModalOpen] = useState(false)
   const [rulesModalMode, setRulesModalMode] = useState<'import-rules' | 'export-rules'>('import-rules')
   const [exportedRuleText, setExportedRuleText] = useState('')
   const [rulesModalOpen, setRulesModalOpen] = useState(false)
