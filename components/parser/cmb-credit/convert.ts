@@ -11,6 +11,15 @@ const nation2CommodityMapping = new Map<string, string>([
     ["JP", "JPY"],
     ["HK", "HKD"],
     ["GB", "GBP"],
+    ["CA", "CAD"],
+    ["AU", "AUD"],
+    ["FR", "EUR"],
+    ["DE", "EUR"],
+    ["IT", "EUR"],
+    ["ES", "EUR"],
+    ["NL", "EUR"],
+    ["BE", "EUR"],
+    ["IE", "EUR"],
 ])
 
 const foreignCurrencyReg = new RegExp(/^([-+]?[0-9]*\.?[0-9]*)\((.+)\)$/)
@@ -20,14 +29,18 @@ export function splitAmountAndCommodity(origin: string, nationCommodityMapping: 
     if (containsForeignCurrency(origin)) {
         const match = foreignCurrencyReg.exec(origin)
         if (match) {
-            const commodity = nationCommodityMapping.get(match[2])
+            const nation = match[2]
+            const commodity = nationCommodityMapping.get(nation)
             if (commodity) {
                 return {
                     amount: match[1],
                     commodity: commodity
                 }
             } else {
-                throw new Error(`Unknown commodity: ${match[2]}`)
+                return {
+                    amount: match[1],
+                    commodity: `[Unrecognized Nation: ${nation}]`
+                }
             }
         } else {
             throw new Error(`Unknown format: ${origin}`)
@@ -39,16 +52,21 @@ export function splitAmountAndCommodity(origin: string, nationCommodityMapping: 
         }
     }
 }
+// MM/DD, year => YYYY-MM-DD
+export function convertDate(origin: string, year: string): string {
+    const [month, day] = origin.split("/")
+    return `${year}-${month}-${day}`
+}
 
-export function cmbCreditRawTxn2BeancountTxn(origin: CMBCreditRawTxn): BeancountTxn {
+export function cmbCreditRawTxn2BeancountTxn(origin: CMBCreditRawTxn, accountName: string, year: string): BeancountTxn {
     const result = {
-        date: origin.soldDate,
+        date: convertDate(origin.soldDate, year),
         payee: origin.description,
         narration: "",
         completed: false,
         postings: [
             {
-                account: "Assets:Unknown",
+                account: accountName || "Assets:Unknown",
                 amount: origin.rmbAmount,
                 commodity: "CNY",
             }
@@ -59,7 +77,7 @@ export function cmbCreditRawTxn2BeancountTxn(origin: CMBCreditRawTxn): Beancount
     } as BeancountTxn;
 
     if (containsForeignCurrency(origin.originalAmount)) {
-        const { amount, commodity } = splitAmountAndCommodity(origin.originalAmount, new Map([["US", "USD"]]))
+        const { amount, commodity } = splitAmountAndCommodity(origin.originalAmount, nation2CommodityMapping)
         result.postings[0].totalCost = amount
         result.postings[0].totalCostCommodity = commodity
     }

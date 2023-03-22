@@ -1,7 +1,7 @@
 import BeancountTxn from '@/components/beancount';
 import { describe, expect, test } from '@jest/globals';
 import { CMBCreditRawTxn } from '.';
-import { cmbCreditRawTxn2BeancountTxn } from './convert';
+import { cmbCreditRawTxn2BeancountTxn, convertDate } from './convert';
 
 describe('convert cmd credit txn to beancount txn', () => {
     test('with foreign currency', () => {
@@ -14,9 +14,9 @@ describe('convert cmd credit txn to beancount txn', () => {
             soldDate: "11/15",
             raw: "11/15 11/17 GITHUB 28.56 0657 4.00(US)"
         } as CMBCreditRawTxn
-        const result = cmbCreditRawTxn2BeancountTxn(txn)
+        const result = cmbCreditRawTxn2BeancountTxn(txn, "", "2023")
         expect(result).toEqual({
-            date: "11/15",
+            date: "2023-11-15",
             payee: "GITHUB",
             narration: "",
             completed: false,
@@ -44,15 +44,15 @@ describe('convert cmd credit txn to beancount txn', () => {
             soldDate: "12/01",
             raw: "12/01 12/01 增值服务使用费-用卡安全保障 5.00 7178 5.00"
         } as CMBCreditRawTxn
-        const result = cmbCreditRawTxn2BeancountTxn(txn)
+        const result = cmbCreditRawTxn2BeancountTxn(txn, "Liabilities:CMB:Visa", "2022")
         expect(result).toEqual({
-            date: "12/01",
+            date: "2022-12-01",
             payee: "增值服务使用费-用卡安全保障",
             narration: "",
             completed: false,
             postings: [
                 {
-                    account: "Assets:Unknown",
+                    account: "Liabilities:CMB:Visa",
                     amount: "5.00",
                     commodity: "CNY",
                 }
@@ -61,5 +61,12 @@ describe('convert cmd credit txn to beancount txn', () => {
                 "12/01 12/01 增值服务使用费-用卡安全保障 5.00 7178 5.00"
             ]
         } as BeancountTxn)
+    })
+})
+
+describe('convert date', () => {
+    test('append year', () => {
+        const result = convertDate("11/17", "2023")
+        expect(result).toEqual("2023-11-17")
     })
 })
