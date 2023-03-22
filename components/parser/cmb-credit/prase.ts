@@ -1,4 +1,4 @@
-import { CMBCreditRawTxn } from "."
+import { CMBCreditRawTxn } from "./model"
 
 export function parseCMBCreditRawTxn(text: string): CMBCreditRawTxn[] {
     const result = [] as CMBCreditRawTxn[]

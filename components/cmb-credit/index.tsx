@@ -1,23 +1,10 @@
 import { useMemo, useState } from "react"
 import { useDebounce } from "react-use"
-import { Action } from "@/components/parser/cmb-debit/convert"
-import { CMBCreditRawTxn } from "@/components/parser/cmb-credit"
+import { CMBCreditRawTxn } from "@/components/parser/cmb-credit/model"
 import { parseCMBCreditRawTxn } from "@/components/parser/cmb-credit/prase"
 import { cmbCreditRawTxn2BeancountTxn } from "@/components/parser/cmb-credit/convert"
 import { renderTxn } from "@/components/beancount"
-
-
-
-type CMBCreditCriterion = {
-    field: keyof CMBCreditRawTxn
-    operator: 'contains' | 'equals' | 'notEquals' | 'startsWith' | 'endsWith'
-    value: string
-}
-
-type CMBCreditConvertRule = {
-    criteria: CMBCreditCriterion[]
-    actions: Action[]
-}
+import { TransformRule } from "../beancount/trasnform"
 
 export default function CMBCredit() {
     const [rawText, setRawText] = useState('')
@@ -32,7 +19,7 @@ export default function CMBCredit() {
         return rawTxns.map((it) => cmbCreditRawTxn2BeancountTxn(it, accountName, year))
     }, [accountName, debouncedText, year])
 
-    const [rules, setRules] = useState<CMBCreditConvertRule[]>([])
+    const [rules, setRules] = useState<TransformRule[]>([])
 
     const renderedBeancounts = useMemo(() => {
         let result = ''
@@ -44,7 +31,7 @@ export default function CMBCredit() {
     }, [beancountTxns])
 
     return (
-        <div className='flex h-screen'>
+        <div className='flex h-full'>
             <div className='w-1/2 flex flex-col'>
                 <div className='flex-none w-full h-1/2 p-4'>
                     <textarea className='textarea textarea-primary w-full h-full'

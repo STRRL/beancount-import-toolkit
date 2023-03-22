@@ -16,7 +16,7 @@ export default function Tabs(props: TabsProps) {
 
     const tabs = useMemo(() => { return props.tabs || [] }, [props])
     return (
-        <div>
+        <div className="h-full">
             <div className="tabs">
                 {tabs.map((tab) => {
                     return (
@@ -34,13 +34,15 @@ export default function Tabs(props: TabsProps) {
                     )
                 })}
             </div>
-            {
-                tabs.filter((tab) => {
-                    return tab.id == props.activeTabID
-                }).map((tab) => {
-                    return tab.node
-                })
-            }
+            <div className="h-full">
+                {
+                    tabs.filter((tab) => {
+                        return tab.id == props.activeTabID
+                    }).map((tab) => {
+                        return tab.node
+                    })
+                }
+            </div>
         </div>
     )
 }

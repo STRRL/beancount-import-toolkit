@@ -13,6 +13,8 @@ export type BeancountTxn = {
     narration: string;
     postings: Posting[];
     comments?: string[];
+    // raw should contain the original raw text of the transaction
+    raw?: string;
 }
 
 export function renderTxn(txn: BeancountTxn) {

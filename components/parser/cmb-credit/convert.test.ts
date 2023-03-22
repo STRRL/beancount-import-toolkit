@@ -1,6 +1,6 @@
 import BeancountTxn from '@/components/beancount';
 import { describe, expect, test } from '@jest/globals';
-import { CMBCreditRawTxn } from '.';
+import { CMBCreditRawTxn } from './model';
 import { cmbCreditRawTxn2BeancountTxn, convertDate } from './convert';
 
 describe('convert cmd credit txn to beancount txn', () => {
@@ -31,7 +31,8 @@ describe('convert cmd credit txn to beancount txn', () => {
             ],
             comments: [
                 "11/15 11/17 GITHUB 28.56 0657 4.00(US)"
-            ]
+            ],
+            raw: "11/15 11/17 GITHUB 28.56 0657 4.00(US)"
         } as BeancountTxn)
     })
     test('without foreign currency', () => {
@@ -59,7 +60,8 @@ describe('convert cmd credit txn to beancount txn', () => {
             ],
             comments: [
                 "12/01 12/01 增值服务使用费-用卡安全保障 5.00 7178 5.00"
-            ]
+            ],
+            raw: "12/01 12/01 增值服务使用费-用卡安全保障 5.00 7178 5.00"
         } as BeancountTxn)
     })
 })

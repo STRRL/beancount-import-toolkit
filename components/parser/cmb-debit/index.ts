@@ -1,7 +1,5 @@
 import BeancountTxn from "@/components/beancount"
-import { Rule, ruleApply, ruleMatch } from "./convert"
-
-export default {};
+import { ruleApply, ruleMatch, TransformRule } from "@/components/beancount/trasnform";
 
 /**
  * CMBDebitRawTxn is the raw transaction data from CMB debit card.
@@ -57,7 +55,7 @@ export function parseCMBRawTxn(text: string): CMBDebitRawTxn[] {
     return result
 }
 
-export function cmbDebitRawTxn2Txn(rawTxn: CMBDebitRawTxn, cmbAccountName: string, rules?: Rule[]): BeancountTxn {
+export function cmbDebitRawTxn2Txn(rawTxn: CMBDebitRawTxn, cmbAccountName: string, rules?: TransformRule[]): BeancountTxn {
     let txn = {
         date: rawTxn.date,
         completed: false,
@@ -70,13 +68,14 @@ export function cmbDebitRawTxn2Txn(rawTxn: CMBDebitRawTxn, cmbAccountName: strin
                 commodity: rawTxn.currency,
             }
         ],
-        comments: [rawTxn.raw]
+        comments: [rawTxn.raw],
+        raw: rawTxn.raw
     } as BeancountTxn
 
     if (rules) {
         for (const rule of rules) {
-            if (ruleMatch(rule, rawTxn)) {
-                txn = ruleApply(rule, txn, rawTxn)
+            if (ruleMatch(rule, txn)) {
+                txn = ruleApply(rule, txn)
                 break
             }
         }

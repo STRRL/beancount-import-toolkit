@@ -1,8 +1,7 @@
-import BeancountTxn from "@/components/beancount"
-import { CMBDebitRawTxn } from "."
+import BeancountTxn from "."
 
 export type Criterion = {
-    field: keyof CMBDebitRawTxn
+    field: keyof BeancountTxn
     operator: 'contains' | 'equals' | 'notEquals' | 'startsWith' | 'endsWith'
     value: string
 }
@@ -16,14 +15,16 @@ export type Action = {
     appendComment?: string
 }
 
-export type Rule = {
+export type TransformRule = {
     criteria: Criterion[]
     actions: Action[]
 }
 
-export function criterionMatch(criterion: Criterion, cmbRawTxn: CMBDebitRawTxn): boolean {
+
+export function criterionMatch(criterion: Criterion, txn: BeancountTxn): boolean {
     let result = true;
-    const fieldValue = cmbRawTxn[criterion.field as keyof CMBDebitRawTxn];
+    const fieldValue = txn[criterion.field as keyof BeancountTxn] as string;
+
     switch (criterion.operator) {
         case 'contains':
             result = fieldValue.includes(criterion.value);
@@ -47,17 +48,18 @@ export function criterionMatch(criterion: Criterion, cmbRawTxn: CMBDebitRawTxn):
     return result;
 }
 
-export function ruleMatch(rule: Rule, cmbRawTxn: CMBDebitRawTxn): boolean {
+export function ruleMatch(rule: TransformRule, txn: BeancountTxn): boolean {
     const result = true;
     for (const criterion of rule.criteria) {
-        if (!criterionMatch(criterion, cmbRawTxn)) {
+        if (!criterionMatch(criterion, txn)) {
             return false;
         }
     }
     return result;
 }
 
-export function ruleApply(rule: Rule, txn: BeancountTxn, rawTxn: CMBDebitRawTxn): BeancountTxn {
+
+export function ruleApply(rule: TransformRule, txn: BeancountTxn): BeancountTxn {
     let result = txn;
     for (const action of rule.actions) {
         if (action.setPayee) {

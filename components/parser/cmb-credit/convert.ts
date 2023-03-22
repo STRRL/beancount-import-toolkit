@@ -1,5 +1,5 @@
 import BeancountTxn from "@/components/beancount";
-import { CMBCreditRawTxn } from ".";
+import { CMBCreditRawTxn } from "./model";
 
 
 export function containsForeignCurrency(origin: string): boolean {
@@ -74,6 +74,7 @@ export function cmbCreditRawTxn2BeancountTxn(origin: CMBCreditRawTxn, accountNam
         comments: [
             origin.raw
         ],
+        raw: origin.raw
     } as BeancountTxn;
 
     if (containsForeignCurrency(origin.originalAmount)) {

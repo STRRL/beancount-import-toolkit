@@ -1,10 +1,10 @@
+import { renderTxn } from '@/components/beancount'
 import NewRuleModal from '@/components/new-rule-modal'
 import { cmbDebitRawTxn2Txn, parseCMBRawTxn } from '@/components/parser/cmb-debit'
-import { Rule } from '@/components/parser/cmb-debit/convert'
 import RuleImportModal from '@/components/rule-import-modal'
-import { renderTxn } from '@/components/beancount'
 import { useMemo, useState } from 'react'
 import useDebounce from 'react-use/lib/useDebounce'
+import { TransformRule } from '../beancount/trasnform'
 
 
 type RawTxn = {
@@ -22,7 +22,7 @@ export default function CMBDebit() {
   const [debouncedText, setDebouncedText] = useState('')
   const [newRuleModalOpen, setNewRuleModalOpen] = useState(false)
   useDebounce(() => { setDebouncedText(rawText) }, 200, [rawText])
-  const [rules, setRules] = useState<Rule[]>([])
+  const [rules, setRules] = useState<TransformRule[]>([])
 
   const [accountName, setAccountName] = useState('')
 
@@ -49,7 +49,7 @@ export default function CMBDebit() {
   }, [parsedTxns])
 
   return (
-    <div className='flex h-screen'>
+    <div className='flex h-full'>
       <div className='w-1/2 flex flex-col'>
         <div className='flex-none w-full h-1/2 p-4'>
           <textarea className='textarea textarea-primary w-full h-full'
@@ -155,7 +155,7 @@ export default function CMBDebit() {
       </div>
       <NewRuleModal
         showModal={newRuleModalOpen}
-        onNewRuleCreated={(newRule: Rule) => {
+        onNewRuleCreated={(newRule: TransformRule) => {
           setRules([...rules, newRule]);
           setNewRuleModalOpen(false)
           setRuleEditMode(false);
@@ -166,7 +166,7 @@ export default function CMBDebit() {
           setRuleEditMode(false);
           setRuleIndexForEdit(-1);
         }}
-        onRuleUpdated={(updatedRule: Rule, index: number) => {
+        onRuleUpdated={(updatedRule: TransformRule, index: number) => {
           const newRules = [...rules];
           newRules[index] = updatedRule;
           setRules(newRules);
@@ -183,7 +183,7 @@ export default function CMBDebit() {
         exportedRuleText={exportedRuleText}
         showModal={rulesModalOpen}
         mode={rulesModalMode}
-        onImportRules={(rules: Rule[]) => {
+        onImportRules={(rules: TransformRule[]) => {
           setRules(rules);
           setRulesModalOpen(false);
         }}

@@ -14,7 +14,7 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main className='container bg-gray-200 mx-auto'>
+            <main className='container bg-gray-200 mx-auto h-screen'>
                 <Tabs
                     activeTabID={activeTab}
                     tabs={[

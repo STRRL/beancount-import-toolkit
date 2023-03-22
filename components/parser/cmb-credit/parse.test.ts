@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { CMBCreditRawTxn } from '.';
+import { CMBCreditRawTxn } from './model';
 import { parseCMBCreditRawTxn, praseOnlineCMBCreditCardTxn } from './prase';
 
 describe('parse cmb credit statement', () => {
