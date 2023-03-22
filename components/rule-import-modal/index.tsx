@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Rule } from "../cmb/convert"
+import { TransformRule } from "../beancount/trasnform"
 
 export default function RuleImportModal(
     props: {
@@ -7,7 +7,7 @@ export default function RuleImportModal(
         mode: 'import-rules' | 'export-rules',
         exportedRuleText: string,
         showModal: boolean,
-        onImportRules: (rules: Rule[]) => void,
+        onImportRules: (rules: TransformRule[]) => void,
     }
 ) {
 
@@ -44,7 +44,7 @@ export default function RuleImportModal(
                         {
                             props.mode === 'import-rules' && (
                                 <button className="btn" onClick={() => {
-                                    props.onImportRules(JSON.parse(value) as Rule[])
+                                    props.onImportRules(JSON.parse(value) as TransformRule[])
                                 }}>Import</button>
                             )
                         }

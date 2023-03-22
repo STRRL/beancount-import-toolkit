@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { Rule } from "../cmb/convert";
+import { TransformRule } from "../beancount/trasnform";
 
 export default function NewRuleModal(
     props: {
-        onNewRuleCreated: (newRule: Rule) => void,
-        onRuleUpdated: (rule: Rule, index: number) => void,
+        onNewRuleCreated: (newRule: TransformRule) => void,
+        onRuleUpdated: (rule: TransformRule, index: number) => void,
         onCancel: () => void,
         showModal: boolean,
         editMode?: boolean,
-        rule?: Rule,
+        rule?: TransformRule,
         ruleIndexForEdit: number,
     }
 ) {
@@ -197,7 +197,7 @@ export default function NewRuleModal(
                                     value: value
                                 }],
                                 actions: []
-                            } as Rule
+                            } as TransformRule
                             if (replacePayee) {
                                 rule.actions.push({
                                     setPayee: newValueForPayee

@@ -6,16 +6,18 @@ export type Posting = {
     totalCostCommodity?: string;
 }
 
-export type Txn = {
+export type BeancountTxn = {
     date: string;
     completed: boolean;
     payee: string;
     narration: string;
     postings: Posting[];
     comments?: string[];
+    // raw should contain the original raw text of the transaction
+    raw?: string;
 }
 
-export function renderTxn(txn: Txn) {
+export function renderTxn(txn: BeancountTxn) {
     let result = '';
     if (txn.comments && txn.comments.length > 0) {
         for (const comment of txn.comments) {
@@ -45,4 +47,4 @@ function renderPosting(posting: Posting) {
     return result
 }
 
-export default Txn;
+export default BeancountTxn;

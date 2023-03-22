@@ -40,6 +40,7 @@ describe('render txn', () => {
     });
     expect(result).toBe(`2021-01-01 ! "payee" "narration"
   Asset:Checking 10 CNY
+  Expenses:Unknown
 
 `);
   })
@@ -84,6 +85,7 @@ describe('render txn', () => {
     });
     expect(result).toBe(`2021-01-01 ! "payee" "narration"
   Asset:Checking 10 HKD @@ 8 CNY
+  Expenses:Unknown
 
 `);
   })

@@ -1,8 +1,8 @@
-import CMBRawTxn from "."
-import Txn from "../txn"
+import BeancountTxn from "."
+var _ = require('lodash');
 
 export type Criterion = {
-    field: keyof CMBRawTxn
+    field: keyof BeancountTxn
     operator: 'contains' | 'equals' | 'notEquals' | 'startsWith' | 'endsWith'
     value: string
 }
@@ -16,14 +16,16 @@ export type Action = {
     appendComment?: string
 }
 
-export type Rule = {
+export type TransformRule = {
     criteria: Criterion[]
     actions: Action[]
 }
 
-export function criterionMatch(criterion: Criterion, cmbRawTxn: CMBRawTxn): boolean {
+
+export function criterionMatch(criterion: Criterion, txn: BeancountTxn): boolean {
     let result = true;
-    const fieldValue = cmbRawTxn[criterion.field as keyof CMBRawTxn];
+    const fieldValue = txn[criterion.field as keyof BeancountTxn] as string;
+
     switch (criterion.operator) {
         case 'contains':
             result = fieldValue.includes(criterion.value);
@@ -47,18 +49,19 @@ export function criterionMatch(criterion: Criterion, cmbRawTxn: CMBRawTxn): bool
     return result;
 }
 
-export function ruleMatch(rule: Rule, cmbRawTxn: CMBRawTxn): boolean {
+export function ruleMatch(rule: TransformRule, txn: BeancountTxn): boolean {
     const result = true;
     for (const criterion of rule.criteria) {
-        if (!criterionMatch(criterion, cmbRawTxn)) {
+        if (!criterionMatch(criterion, txn)) {
             return false;
         }
     }
     return result;
 }
 
-export function ruleApply(rule: Rule, txn: Txn, rawTxn: CMBRawTxn): Txn {
-    let result = txn;
+
+export function ruleApply(rule: TransformRule, txn: BeancountTxn): BeancountTxn {
+    let result = _.cloneDeep(txn);
     for (const action of rule.actions) {
         if (action.setPayee) {
             result.payee = action.setPayee;
@@ -83,6 +86,16 @@ export function ruleApply(rule: Rule, txn: Txn, rawTxn: CMBRawTxn): Txn {
             } else {
                 result.comments = [action.appendComment];
             }
+        }
+    }
+    return result;
+}
+
+export function transform(txn: BeancountTxn, rules: TransformRule[]): BeancountTxn {
+    let result = txn;
+    for (const rule of rules) {
+        if (ruleMatch(rule, txn)) {
+            result = ruleApply(rule, result);
         }
     }
     return result;
