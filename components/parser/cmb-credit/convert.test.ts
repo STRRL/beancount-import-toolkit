@@ -23,10 +23,10 @@ describe('convert cmd credit txn to beancount txn', () => {
             postings: [
                 {
                     account: "Assets:Unknown",
-                    amount: "4.00",
-                    commodity : "USD",
-                    totalCost : "28.56",
-                    totalCostCommodity: "CNY",
+                    amount: "-28.56",
+                    commodity: "CNY",
+                    totalCost: "4.00",
+                    totalCostCommodity: "USD",
                 }
             ],
             comments: [
@@ -54,7 +54,7 @@ describe('convert cmd credit txn to beancount txn', () => {
             postings: [
                 {
                     account: "Liabilities:CMB:Visa",
-                    amount: "5.00",
+                    amount: "-5.00",
                     commodity: "CNY",
                 }
             ],

@@ -61,6 +61,14 @@ export function convertDate(origin: string, year: string): string {
     return `${year}-${month}-${day}`
 }
 
+export function negativeAmount(origin: string): string {
+    if (origin.startsWith("-")) {
+        return origin
+    } else {
+        return `-${origin}`
+    }
+}
+
 export function cmbCreditRawTxn2BeancountTxn(origin: CMBCreditRawTxn, accountName: string, year: string): BeancountTxn {
     const result = {
         date: convertDate(origin.soldDate, year),
@@ -70,7 +78,7 @@ export function cmbCreditRawTxn2BeancountTxn(origin: CMBCreditRawTxn, accountNam
         postings: [
             {
                 account: accountName || "Assets:Unknown",
-                amount: origin.rmbAmount,
+                amount: negativeAmount(origin.rmbAmount),
                 commodity: "CNY",
             }
         ],
@@ -82,10 +90,8 @@ export function cmbCreditRawTxn2BeancountTxn(origin: CMBCreditRawTxn, accountNam
 
     if (containsForeignCurrency(origin.originalAmount)) {
         const { amount, commodity } = splitAmountAndCommodity(origin.originalAmount, nation2CommodityMapping)
-        result.postings[0].totalCost = origin.rmbAmount
-        result.postings[0].totalCostCommodity = "CNY"
-        result.postings[0].amount = amount
-        result.postings[0].commodity = commodity
+        result.postings[0].totalCost = amount
+        result.postings[0].totalCostCommodity = commodity
     }
     return result
 }
