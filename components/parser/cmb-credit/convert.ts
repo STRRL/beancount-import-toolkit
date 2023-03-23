@@ -63,7 +63,7 @@ export function convertDate(origin: string, year: string): string {
 
 export function negativeAmount(origin: string): string {
     if (origin.startsWith("-")) {
-        return origin
+        return origin.substring(1)
     } else {
         return `-${origin}`
     }
