@@ -1,7 +1,34 @@
 import { WechatRawTxn } from "./model";
 
 export function parseWechatRawTxn(text: string): WechatRawTxn[] {
-    return []
+    const result = [] as WechatRawTxn[]
+    const lines = [] as string[]
+
+    for (const [_, item] of text.split('\n').entries()) {
+        
+        // drop the empty line
+        if (item.trim() === "") {
+            continue
+        }
+
+        // drop the row with only one column
+        if (item.split(",")[1] === '') {
+            continue
+        }
+
+        // drop the the title line
+        if (item.includes("交易时间") && item.includes("交易类型")) {
+            continue
+        }
+
+        lines.push(item)
+    }
+
+    for (const [_, line] of lines.entries()) {
+        result.push(parseOneLineWechatTxn(line))
+    }
+
+    return result
 }
 
 export function parseOneLineWechatTxn(text: string): WechatRawTxn {
