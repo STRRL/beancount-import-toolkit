@@ -29,13 +29,13 @@ export function parseCMBCreditRawTxn(text: string): CMBCreditRawTxn[] {
     }
 
     for (const [_, line] of lines.entries()) {
-        result.push(praseOnlineCMBCreditCardTxn(line))
+        result.push(praseOneLineCMBCreditCardTxn(line))
     }
 
     return result
 }
 
-export function praseOnlineCMBCreditCardTxn(text: string): CMBCreditRawTxn {
+export function praseOneLineCMBCreditCardTxn(text: string): CMBCreditRawTxn {
     const raw = text.trim()
     // separate the text with space
     const items = raw.split(" ")

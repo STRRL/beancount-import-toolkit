@@ -1,11 +1,11 @@
 import { describe, expect, test } from '@jest/globals';
 import { CMBCreditRawTxn } from './model';
-import { parseCMBCreditRawTxn, praseOnlineCMBCreditCardTxn } from './prase';
+import { parseCMBCreditRawTxn, praseOneLineCMBCreditCardTxn } from './prase';
 
 describe('parse cmb credit statement', () => {
     describe('prase one line statement', () => {
         test('prase one line', () => {
-            const txn = praseOnlineCMBCreditCardTxn(" 11/15 11/17 GITHUB 28.56 0657 4.00(US)  ")
+            const txn = praseOneLineCMBCreditCardTxn(" 11/15 11/17 GITHUB 28.56 0657 4.00(US)  ")
             expect(txn).toEqual({
                 cardNo: "0657",
                 description: "GITHUB",
@@ -17,7 +17,7 @@ describe('parse cmb credit statement', () => {
             } as CMBCreditRawTxn)
         })
         test('prase one line with long description', () => {
-            const txn = praseOnlineCMBCreditCardTxn(" 11/22 11/24 GOOGLE *Google Storage 71.54 0657 9.99(US)")
+            const txn = praseOneLineCMBCreditCardTxn(" 11/22 11/24 GOOGLE *Google Storage 71.54 0657 9.99(US)")
             expect(txn).toEqual({
                 cardNo: "0657",
                 description: "GOOGLE *Google Storage",
