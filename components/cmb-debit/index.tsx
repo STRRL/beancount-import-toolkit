@@ -6,17 +6,6 @@ import { useMemo, useState } from 'react'
 import useDebounce from 'react-use/lib/useDebounce'
 import { TransformRule } from '../beancount/trasnform'
 
-
-type RawTxn = {
-  date: string
-  currency: string
-  amount: string
-  balance: string
-  description: string
-  raw: string
-}
-
-
 export default function CMBDebit() {
   const [rawText, setRawText] = useState('')
   const [debouncedText, setDebouncedText] = useState('')

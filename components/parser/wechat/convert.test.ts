@@ -31,7 +31,7 @@ describe('convert wechat txn to beancount txn', () => {
             postings: [
                 {
                     account: "Assets:Unknown",
-                    amount: "52.00",
+                    amount: "-52.00",
                     commodity: "CNY"
                 }
             ],

@@ -1,6 +1,7 @@
 import CMBCredit from '@/components/cmb-credit'
 import CMBDebit from '@/components/cmb-debit'
 import Tabs from '@/components/tabs'
+import Wechat from '@/components/wechat'
 import Head from 'next/head'
 import { useState } from 'react'
 export default function Home() {
@@ -22,11 +23,14 @@ export default function Home() {
                             id: 'debit',
                             title: 'Debit',
                             node: <CMBDebit></CMBDebit>
-                        },
-                        {
+                        }, {
                             id: 'credit',
                             title: 'Credit',
                             node: <CMBCredit></CMBCredit>
+                        }, {
+                            id: 'wechat',
+                            title: 'Wechat',
+                            node: <Wechat></Wechat>
                         }
                     ]
                     }
