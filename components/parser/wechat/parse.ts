@@ -5,7 +5,7 @@ export function parseWechatRawTxn(text: string): WechatRawTxn[] {
     const lines = [] as string[]
 
     for (const [_, item] of text.split('\n').entries()) {
-        
+
         // drop the empty line
         if (item.trim() === "") {
             continue
@@ -70,6 +70,7 @@ export function parseOneLineWechatTxn(text: string): WechatRawTxn {
         status,
         txnId,
         merchantId,
-        remark
+        remark,
+        raw: text.trim()
     }
 }

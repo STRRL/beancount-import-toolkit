@@ -26,4 +26,5 @@ export type WechatRawTxn = {
     merchantId: string
     // 备注
     remark: string
+    raw: string
 }
