@@ -78,7 +78,7 @@ export function cmbCreditRawTxn2BeancountTxn(origin: CMBCreditRawTxn, accountNam
         postings: [
             {
                 account: accountName || "Assets:Unknown",
-                amount: negativeAmount(origin.rmbAmount),
+                amount: negativeAmount(origin.rmbAmount || ""),
                 commodity: "CNY",
             }
         ],
