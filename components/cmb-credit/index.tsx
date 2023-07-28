@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react"
 import { useDebounce } from "react-use"
-import { CMBCreditRawTxn } from "@/components/parser/cmb-credit/model"
 import { parseCMBCreditRawTxn } from "@/components/parser/cmb-credit/prase"
 import { cmbCreditRawTxn2BeancountTxn } from "@/components/parser/cmb-credit/convert"
 import { renderTxn } from "@/components/beancount"
@@ -16,10 +15,7 @@ export default function CMBCredit() {
 
     useDebounce(() => { setDebouncedText(rawText) }, 200, [rawText])
 
-    const beancountTxns = useMemo(() => {
-        const rawTxns = parseCMBCreditRawTxn(debouncedText)
-        return rawTxns.map((it) => cmbCreditRawTxn2BeancountTxn(it, accountName, year))
-    }, [accountName, debouncedText, year])
+
 
     const [rules, setRules] = useState<TransformRule[]>([])
     const [ruleEditMode, setRuleEditMode] = useState(false)
@@ -30,6 +26,11 @@ export default function CMBCredit() {
     const [exportedRuleText, setExportedRuleText] = useState('')
     const [rulesModalOpen, setRulesModalOpen] = useState(false)
 
+    const beancountTxns = useMemo(() => {
+        const rawTxns = parseCMBCreditRawTxn(debouncedText)
+        return rawTxns.map((it) => cmbCreditRawTxn2BeancountTxn(it, accountName, year))
+    }, [accountName, debouncedText, year])
+    
     const transformedTxns = useMemo(() => {
         return beancountTxns.map((it) => {
             return transform(it, rules)
@@ -55,14 +56,14 @@ export default function CMBCredit() {
                 </div>
                 <div className='flex-none flex p-2'>
                     <p className='px-4 my-auto'>Rules:</p>
-                    <button className='btn mx-2' onClick={() => {
+                    <button className='btn btn-primary mx-2' onClick={() => {
                         setNewRuleModalOpen(true);
                     }}>Add</button>
-                    <button className='btn mx-2' onClick={() => {
+                    <button className='btn btn-primary mx-2' onClick={() => {
                         setRulesModalMode('import-rules')
                         setRulesModalOpen(true);
                     }}>Import</button>
-                    <button className='btn mx-2' onClick={() => {
+                    <button className='btn btn-primary mx-2' onClick={() => {
                         setExportedRuleText(JSON.stringify(rules))
                         setRulesModalMode('export-rules')
                         setRulesModalOpen(true);
@@ -117,7 +118,7 @@ export default function CMBCredit() {
                                         })
                                     }
                                     <div className='flex'>
-                                        <button className='flex-1 btn mx-2' onClick={() => {
+                                        <button className='flex-1 btn btn-primary mx-2' onClick={() => {
                                             setRuleEditMode(true);
                                             setRuleIndexForEdit(index);
                                             setNewRuleModalOpen(true);

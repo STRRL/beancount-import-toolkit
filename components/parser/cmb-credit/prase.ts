@@ -5,7 +5,8 @@ export function parseCMBCreditRawTxn(text: string): CMBCreditRawTxn[] {
 
     const lines = [] as string[]
 
-    for (const [_, item] of text.split('\n').entries()) {
+    for (const [_, line] of text.split('\n').entries()) {
+        const item = line.trim()
         // drop the empty line
         if (item.trim() === "") {
             continue
@@ -20,11 +21,21 @@ export function parseCMBCreditRawTxn(text: string): CMBCreditRawTxn[] {
             continue
         }
 
-        // drop the repayment line
-        if (item.includes("自动还款")) {
+        if (item.includes("人民币账户") && item.includes("RMB")) {
             continue
         }
 
+        if (item.trim() === "费用" || item.trim() === ("消费")) {
+            continue
+        }
+
+
+        // drop the repayment line
+        if (item.includes("自动还款") || item.includes("还款")) {
+            continue
+        }
+
+        // drop the 
         lines.push(item)
     }
 
@@ -38,7 +49,7 @@ export function parseCMBCreditRawTxn(text: string): CMBCreditRawTxn[] {
 export function praseOneLineCMBCreditCardTxn(text: string): CMBCreditRawTxn {
     const raw = text.trim()
     // separate the text with space
-    const items = raw.split(" ")
+    const items = raw.split(/\s+/)
     // first element is sold date
     const soldDate = items[0]
     // second element is posted date

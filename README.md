@@ -1,4 +1,4 @@
-# CMB Beancount
+# Beancount Import Toolkit
 
 <https://cmb-beancount.vercel.app/>
 

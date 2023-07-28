@@ -69,4 +69,19 @@ describe('parse cmb credit statement', () => {
         })
 
     })
+
+    describe('parse lines from PDF', () => {
+        test('lines in PDF', () => {
+            const txn = praseOneLineCMBCreditCardTxn(`06/20   06/22   PLAYSTATION NETWOR   44.21   0657   48.00(JP)`)
+            expect(txn).toEqual({
+                cardNo: "0657",
+                description: "PLAYSTATION NETWOR",
+                originalAmount: "48.00(JP)",
+                postedDate: "06/22",
+                rmbAmount: "44.21",
+                soldDate: "06/20",
+                raw: "06/20   06/22   PLAYSTATION NETWOR   44.21   0657   48.00(JP)"
+            })
+        })
+    })
 })

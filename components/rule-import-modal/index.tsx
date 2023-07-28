@@ -43,12 +43,12 @@ export default function RuleImportModal(
                     <div className="modal-action">
                         {
                             props.mode === 'import-rules' && (
-                                <button className="btn" onClick={() => {
+                                <button className="btn btn-primary" onClick={() => {
                                     props.onImportRules(JSON.parse(value) as TransformRule[])
                                 }}>Import</button>
                             )
                         }
-                        <button className="btn" onClick={() => {
+                        <button className="btn btn-primary" onClick={() => {
                             props.onCancel()
                         }}>Cancel</button>
                     </div>

@@ -42,7 +42,7 @@ export function parseCMBRawTxn(text: string): CMBDebitRawTxn[] {
 
     // parse one-line txn
     for (const line of lines) {
-        const [date, currency, amount, balance, ...description] = line.split(' ')
+        const [date, currency, amount, balance, ...description] = line.split(/\s+/)
         result.push({
             date,
             currency,

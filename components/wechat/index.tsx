@@ -6,6 +6,8 @@ import NewRuleModal from "../new-rule-modal"
 import { wechatRawTxn2BeancountTxn } from "../parser/wechat/convert"
 import { parseWechatRawTxn } from "../parser/wechat/parse"
 import RuleImportModal from "../rule-import-modal"
+import { Button, Text, Title1, Title3 } from "@fluentui/react-components"
+import { Field, Textarea, TextareaProps } from "@fluentui/react-components";
 
 export default function Wechat() {
     const [rawText, setRawText] = useState('')
@@ -50,7 +52,7 @@ export default function Wechat() {
         })
         return result
     }, [parsedTxns])
-    return (
+    return (<div>
         <div className='flex h-full'>
             <div className='w-1/2 flex flex-col'>
                 <div className='flex-none w-full h-1/2 p-4'>
@@ -194,5 +196,7 @@ export default function Wechat() {
                 }}
             ></RuleImportModal>
         </div>
+    </div>
+
     )
 }
