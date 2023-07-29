@@ -36,8 +36,8 @@ export default function Home() {
                 <div className='grid gap-4 lg:grid-cols-4 md:grid-cols-2'>
                     <Link href={'/record/cmb-credit'} >
                         <div>
-                            <div className="card bg-base-100 shadow-xl">
-                                <figure><img src={resolveAsset("office1.png")} alt="Shoes" /></figure>
+                            <div className="card shadow-xl">
+                                <figure><img src="/images/cmb-credit-card.png" alt="CMB Credit Card" /></figure>
                                 <div className="card-body">
                                     <h2 className="card-title">CMB Credit Card</h2>
                                     <div className="card-actions justify-end">

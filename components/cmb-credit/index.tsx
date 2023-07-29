@@ -56,14 +56,14 @@ export default function CMBCredit() {
                 </div>
                 <div className='flex-none flex p-2'>
                     <p className='px-4 my-auto'>Rules:</p>
-                    <button className='btn btn-primary mx-2' onClick={() => {
+                    <button className='btn mx-2' onClick={() => {
                         setNewRuleModalOpen(true);
                     }}>Add</button>
-                    <button className='btn btn-primary mx-2' onClick={() => {
+                    <button className='btn mx-2' onClick={() => {
                         setRulesModalMode('import-rules')
                         setRulesModalOpen(true);
                     }}>Import</button>
-                    <button className='btn btn-primary mx-2' onClick={() => {
+                    <button className='btn mx-2' onClick={() => {
                         setExportedRuleText(JSON.stringify(rules))
                         setRulesModalMode('export-rules')
                         setRulesModalOpen(true);
@@ -118,7 +118,7 @@ export default function CMBCredit() {
                                         })
                                     }
                                     <div className='flex'>
-                                        <button className='flex-1 btn btn-primary mx-2' onClick={() => {
+                                        <button className='flex-1 btn mx-2' onClick={() => {
                                             setRuleEditMode(true);
                                             setRuleIndexForEdit(index);
                                             setNewRuleModalOpen(true);

@@ -1,5 +1,6 @@
 'use client'
 
+import NoSSR from "@/components/NoSSR";
 import { renderTxn } from "@/components/beancount";
 import { TransformRule, transform } from "@/components/beancount/trasnform"
 import NewRuleModal from "@/components/new-rule-modal";
@@ -72,8 +73,8 @@ export default function CMBCreditPage() {
     }
 
     return (
-        <div className='bg-base-200'>
-            <div className='container mx-auto h-[100vh] p-4 bg-base-100'>
+        <NoSSR>
+            <div className='container mx-auto h-[100vh] p-4'>
                 <div className="flex items-center pb-4">
                     <span className="text-2xl pr-8">Upload PDF: </span>
                     <div >
@@ -101,15 +102,15 @@ export default function CMBCreditPage() {
                         <div className='w-full py-2'>
                             <div>
                                 <div className='flex-none flex'>
-                                    <p className='text-2xl'>{rules.length} rules loaded:</p>
-                                    <button className='btn btn-primary btn-sm mx-2' onClick={() => {
+                                    <p className='text-2xl pb-4'>{rules.length} rules loaded:</p>
+                                    <button className='btn btn-sm mx-2' onClick={() => {
                                         setNewRuleModalOpen(true);
                                     }}>Add</button>
-                                    <button className='btn btn-primary btn-sm mx-2' onClick={() => {
+                                    <button className='btn btn-sm mx-2' onClick={() => {
                                         setRulesModalMode('import-rules')
                                         setRulesModalOpen(true);
                                     }}>Import</button>
-                                    <button className='btn btn-primary btn-sm mx-2' onClick={() => {
+                                    <button className='btn btn-sm mx-2' onClick={() => {
                                         setExportedRuleText(JSON.stringify(rules))
                                         setRulesModalMode('export-rules')
                                         setRulesModalOpen(true);
@@ -119,7 +120,7 @@ export default function CMBCreditPage() {
                             <div className='flex-1 w-full flex flex-col h-[35vh] overflow-y-auto'>
                                 <div className='w-full pt-2 grid grid-cols-2 gap-6'>
                                     {rules.map((rule, index) => {
-                                        return (<div className="card bg-base-300" key={`rule-${index}`}>
+                                        return (<div className="card bg-base-200" key={`rule-${index}`}>
                                             <div className='card-body py-4'>
                                                 <div className='divider m-0'>when</div>
                                                 <div>
@@ -176,12 +177,12 @@ export default function CMBCreditPage() {
                                                     }
                                                 </div>
                                                 <div className='flex'>
-                                                    <button className='flex-1 btn btn-xs btn-primary mx-2' onClick={() => {
+                                                    <button className='flex-1 btn btn-xs mx-2' onClick={() => {
                                                         setRuleEditMode(true);
                                                         setRuleIndexForEdit(index);
                                                         setNewRuleModalOpen(true);
                                                     }}>Edit</button>
-                                                    <button className='flex-1 btn btn-xs btn-primary mx-2' onClick={() => {
+                                                    <button className='flex-1 btn btn-xs mx-2' onClick={() => {
                                                         const newRules = [...rules];
                                                         newRules.splice(index, 1);
                                                         setRules(newRules);
@@ -241,6 +242,6 @@ export default function CMBCreditPage() {
                     setRulesModalOpen(false);
                 }}
             ></RuleImportModal>
-        </div>
+        </NoSSR>
     )
 }
