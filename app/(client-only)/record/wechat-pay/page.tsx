@@ -1,26 +1,21 @@
-'use client'
+'use client';
 
 import { renderTxn } from "@/components/beancount";
-import { TransformRule, transform } from "@/components/beancount/trasnform"
-import NewRuleModal from "@/components/new-rule-modal";
-import { cmbDebitRawTxn2Txn, parseCMBRawTxn } from "@/components/parser/cmb-debit";
-import extractTextFromPDF from "@/components/pdf"
-import RuleImportModal from "@/components/rule-import-modal";
-import { ChangeEvent, useMemo, useState } from "react"
+import { TransformRule, ruleApply, ruleMatch } from "@/components/beancount/trasnform"
+import NewRuleModal from "@/components/new-rule-modal"
+import { wechatRawTxn2BeancountTxn } from "@/components/parser/wechat/convert";
+import { parseWechatRawTxn } from "@/components/parser/wechat/parse";
+import RuleImportModal from "@/components/rule-import-modal"
+import { useState, useMemo, ChangeEvent } from "react"
 import { useLocalStorage } from "react-use"
 
-export default function CMBDebitPage() {
-    function cutStringBoundaryExcluded(str: string, start: string): string {
-        return str.substring(
-            str.indexOf(start) + start.length,
-        )
-    }
+export default function WeChatPayPage() {
 
-    const [accountName, setAccountName, purgeAccountName] = useLocalStorage('beancount-import-toolkit.cmb-debit.account-name', 'Assets:Bank:CMB:Saving')
+    const [accountName, setAccountName, purgeAccountName] = useLocalStorage('beancount-import-toolkit.wechat-pay.account-name', 'Assets:WeChat:Cash')
 
     const [rawText, setRawText] = useState('')
 
-    const [rulesOrUndefined, setRules, purgeRules] = useLocalStorage('beancount-import-toolkit.cmb-debit.rules', [] as TransformRule[])
+    const [rulesOrUndefined, setRules, purgeRules] = useLocalStorage('beancount-import-toolkit.wechat-pay.rules', [] as TransformRule[])
     const rules = useMemo(() => rulesOrUndefined || [], [rulesOrUndefined])
 
     const [ruleEditMode, setRuleEditMode] = useState(false)
@@ -32,40 +27,55 @@ export default function CMBDebitPage() {
     const [exportedRuleText, setExportedRuleText] = useState('')
     const [rulesModalOpen, setRulesModalOpen] = useState(false)
 
-
-    const transformedTxns = useMemo(() => {
-        const cmbRawTxns = parseCMBRawTxn(rawText)
-        return cmbRawTxns.map(txn => cmbDebitRawTxn2Txn(txn, accountName || '', rules))
+    const parsedTxns = useMemo(() => {
+        const cmbRawTxns = parseWechatRawTxn(rawText)
+        return cmbRawTxns.map(txn => wechatRawTxn2BeancountTxn(txn, accountName || "")).map(txn => {
+            var result = txn
+            if (rules) {
+                for (const rule of rules) {
+                    if (ruleMatch(rule, txn)) {
+                        result = ruleApply(rule, txn)
+                        break
+                    }
+                }
+            }
+            return result
+        }).sort((a, b) => {
+            // sort by date time,first element in raw
+            return a.raw!.split(',')[0].localeCompare(b.raw!.split(',')[0])
+        })
     }, [accountName, rawText, rules])
 
     const renderedBeancounts = useMemo(() => {
         let result = ''
-        transformedTxns.forEach(txn => {
+        parsedTxns.forEach(txn => {
             result += renderTxn(txn)
         })
         return result
-    }, [transformedTxns])
+    }, [parsedTxns])
 
 
     const loadFile = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            const file = e.target.files![0]
-            if (file.name.endsWith('.pdf')) {
-                var bytes = new Uint8Array(await file.arrayBuffer())
-                let content = await extractTextFromPDF(bytes)
-                let tablePart = cutStringBoundaryExcluded(content, 'Counter Party')
-                setRawText(tablePart)
-            } else {
-                alert('Only support PDF file')
+            if (e.target.files.length > 0) {
+                const file = e.target.files![0]
+                if (file.name.endsWith('.csv')) {
+                    const content = await file.text();
+                    console.log(content)
+                    setRawText(content)
+                } else {
+                    alert('Only support CSV file')
+                }
             }
         }
     }
+
 
     return (
         <div>
             <div className='container mx-auto h-[100vh] p-4'>
                 <div className="flex items-center pb-4">
-                    <span className="text-2xl pr-8">Upload PDF: </span>
+                    <span className="text-2xl pr-8">Upload CSV: </span>
                     <div >
                         <input type="file" className="file-input file-input-sm file-input-primary w-full max-w-xs"
                             onChange={(e) => { loadFile(e) }}
