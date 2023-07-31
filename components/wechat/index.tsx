@@ -1,13 +1,11 @@
-import { useState, useMemo } from "react"
+import { useMemo, useState } from "react"
 import { useDebounce } from "react-use"
 import { renderTxn } from "../beancount"
-import { ruleApply, ruleMatch, TransformRule } from "../beancount/trasnform"
+import { TransformRule, ruleApply, ruleMatch } from "../beancount/trasnform"
 import NewRuleModal from "../new-rule-modal"
 import { wechatRawTxn2BeancountTxn } from "../parser/wechat/convert"
 import { parseWechatRawTxn } from "../parser/wechat/parse"
 import RuleImportModal from "../rule-import-modal"
-import { Button, Text, Title1, Title3 } from "@fluentui/react-components"
-import { Field, Textarea, TextareaProps } from "@fluentui/react-components";
 
 export default function Wechat() {
     const [rawText, setRawText] = useState('')
