@@ -37,8 +37,8 @@ export default function Home() {
                     <Link href={'/record/cmb-credit'} >
                         <div>
                             <div className="card shadow-xl">
-                                <figure><img src="/images/cmb-credit-card.png" alt="CMB Credit Card" /></figure>
-                                <div className="card-body">
+                                <figure><Image width={400} height={300} src="/images/cmb-credit-card.png" alt="CMB Credit Card" /></figure>
+                                <div className="card-body place-content-end">
                                     <h2 className="card-title">CMB Credit Card</h2>
                                     <div className="card-actions justify-end">
                                     </div>
@@ -46,8 +46,18 @@ export default function Home() {
                             </div>
                         </div>
                     </Link>
-                </div>
 
+                    <Link href={'/record/cmb-debit'} >
+                        <div className="card shadow-xl w-full h-full">
+                            <figure><Image width={400} height={300} src="/images/cmb-debit-card.png" alt="CMB Debit Card" /></figure>
+                            <div className="card-body place-content-end">
+                                <h2 className="card-title">CMB Debit Card</h2>
+                                <div className="card-actions justify-end">
+                                </div>
+                            </div>
+                        </div>
+                    </Link>
+                </div>
             </main >
         </div >
     )

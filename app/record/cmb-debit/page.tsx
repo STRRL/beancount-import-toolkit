@@ -6,7 +6,6 @@ import { TransformRule, transform } from "@/components/beancount/trasnform"
 import NewRuleModal from "@/components/new-rule-modal";
 import { cmbCreditRawTxn2BeancountTxn } from "@/components/parser/cmb-credit/convert";
 import { parseCMBCreditRawTxn } from "@/components/parser/cmb-credit/prase";
-import { cmbDebitRawTxn2Txn, parseCMBRawTxn } from "@/components/parser/cmb-debit";
 import extractTextFromPDF from "@/components/pdf"
 import RuleImportModal from "@/components/rule-import-modal";
 import { ChangeEvent, useMemo, useState } from "react"
@@ -20,10 +19,12 @@ export default function CMBCreditPage() {
         )
     }
 
-    const [accountName, setAccountName, purgeAccountName] = useLocalStorage('beancount-import-toolkit.cmb-credit.account-name', 'Assets:Bank:CMB:CreditCard')
+    const [accountName, setAccountName, purgeAccountName] = useLocalStorage('beancount-import-toolkit.cmb-debit.account-name', 'Assets:Bank:CMB:Saving')
+    const [year, setYear, purgeYear] = useLocalStorage('beancount-import-toolkit.cmb-credit.year-of-the-statements', '2023')
+
     const [rawText, setRawText] = useState('')
 
-    const [rulesOrUndefined, setRules, purgeRules] = useLocalStorage('beancount-import-toolkit.cmb-credit.rules', [] as TransformRule[])
+    const [rulesOrUndefined, setRules, purgeRules] = useLocalStorage('beancount-import-toolkit.cmb-debit.rules', [] as TransformRule[])
     const rules = useMemo(() => rulesOrUndefined || [], [rulesOrUndefined])
 
     const [ruleEditMode, setRuleEditMode] = useState(false)
@@ -35,20 +36,25 @@ export default function CMBCreditPage() {
     const [exportedRuleText, setExportedRuleText] = useState('')
     const [rulesModalOpen, setRulesModalOpen] = useState(false)
 
-    const parsedTxns = useMemo(() => {
-        const cmbRawTxns = parseCMBRawTxn(rawText)
-        return cmbRawTxns.map(txn => cmbDebitRawTxn2Txn(txn, accountName || "", rules))
+
+    const beancountTxns = useMemo(() => {
+        const rawTxns = parseCMBCreditRawTxn(rawText)
+        return rawTxns.map((it) => cmbCreditRawTxn2BeancountTxn(it, accountName || "", year || "2023"))
+    }, [accountName, rawText, year])
     
-      }, [accountName, rawText, rules])
-    
-      const renderedBeancounts = useMemo(() => {
+    const transformedTxns = useMemo(() => {
+        return beancountTxns.map((it) => {
+            return transform(it, rules)
+        })
+    }, [beancountTxns, rules])
+
+    const renderedBeancounts = useMemo(() => {
         let result = ''
-        parsedTxns.forEach(txn => {
-          result += renderTxn(txn)
+        transformedTxns.forEach(txn => {
+            result += renderTxn(txn)
         })
         return result
-      }, [parsedTxns])
-    
+    }, [transformedTxns])
 
 
     const loadFile = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,9 +63,10 @@ export default function CMBCreditPage() {
             if (file.name.endsWith('.pdf')) {
                 var bytes = new Uint8Array(await file.arrayBuffer())
                 let content = await extractTextFromPDF(bytes)
-                let tablePart = cutStringBoundaryExcluded(content, '本期账务明细 Transaction Details', '招商银行信用卡对账单')
-                console.log(tablePart)
-                setRawText(tablePart)
+                console.log(content)
+                // let tablePart = cutStringBoundaryExcluded(content, '本期账务明细 Transaction Details', '招商银行信用卡对账单')
+                // console.log(tablePart)
+                // setRawText(tablePart)
             } else {
                 alert('Only support PDF file')
             }
@@ -82,6 +89,13 @@ export default function CMBCreditPage() {
                     <input type="text" placeholder="Type here" className="input input-sm input-bordered input-primary w-full max-w-xs"
                         value={accountName}
                         onChange={(e) => { setAccountName(e.target.value) }}
+                    />
+                </div>
+                <div className="flex items-center pb-2">
+                    <span className="text-2xl pr-8">Year of Statements:</span>
+                    <input type="text" placeholder="Type here" className="input input-sm input-bordered input-primary w-full max-w-xs"
+                        value={year}
+                        onChange={(e) => { setYear(e.target.value) }}
                     />
                 </div>
                 <div className="flex flex-col pb-4">
