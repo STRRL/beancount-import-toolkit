@@ -4,7 +4,7 @@ export function parseWechatRawTxn(text: string): WechatRawTxn[] {
     const result = [] as WechatRawTxn[]
     const lines = [] as string[]
 
-    for (const [_, item] of text.split('\n').entries()) {
+    for (const [_, item] of text.split(/\r?\n/).entries()) {
 
         // drop the empty line
         if (item.trim() === "") {

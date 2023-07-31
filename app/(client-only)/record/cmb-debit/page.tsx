@@ -1,26 +1,22 @@
 'use client'
 
-import NoSSR from "@/components/NoSSR";
 import { renderTxn } from "@/components/beancount";
 import { TransformRule, transform } from "@/components/beancount/trasnform"
 import NewRuleModal from "@/components/new-rule-modal";
-import { cmbCreditRawTxn2BeancountTxn } from "@/components/parser/cmb-credit/convert";
-import { parseCMBCreditRawTxn } from "@/components/parser/cmb-credit/prase";
+import { cmbDebitRawTxn2Txn, parseCMBRawTxn } from "@/components/parser/cmb-debit";
 import extractTextFromPDF from "@/components/pdf"
 import RuleImportModal from "@/components/rule-import-modal";
 import { ChangeEvent, useMemo, useState } from "react"
 import { useLocalStorage } from "react-use"
 
-export default function CMBCreditPage() {
-    function cutStringBoundaryExcluded(str: string, start: string, end: string): string {
+export default function CMBDebitPage() {
+    function cutStringBoundaryExcluded(str: string, start: string): string {
         return str.substring(
             str.indexOf(start) + start.length,
-            str.indexOf(end)
         )
     }
 
     const [accountName, setAccountName, purgeAccountName] = useLocalStorage('beancount-import-toolkit.cmb-debit.account-name', 'Assets:Bank:CMB:Saving')
-    const [year, setYear, purgeYear] = useLocalStorage('beancount-import-toolkit.cmb-credit.year-of-the-statements', '2023')
 
     const [rawText, setRawText] = useState('')
 
@@ -37,17 +33,11 @@ export default function CMBCreditPage() {
     const [rulesModalOpen, setRulesModalOpen] = useState(false)
 
 
-    const beancountTxns = useMemo(() => {
-        const rawTxns = parseCMBCreditRawTxn(rawText)
-        return rawTxns.map((it) => cmbCreditRawTxn2BeancountTxn(it, accountName || "", year || "2023"))
-    }, [accountName, rawText, year])
-    
     const transformedTxns = useMemo(() => {
-        return beancountTxns.map((it) => {
-            return transform(it, rules)
-        })
-    }, [beancountTxns, rules])
-
+        const cmbRawTxns = parseCMBRawTxn(rawText)
+        return cmbRawTxns.map(txn => cmbDebitRawTxn2Txn(txn, accountName || '', rules))
+    }, [accountName, rawText, rules])
+    
     const renderedBeancounts = useMemo(() => {
         let result = ''
         transformedTxns.forEach(txn => {
@@ -63,10 +53,8 @@ export default function CMBCreditPage() {
             if (file.name.endsWith('.pdf')) {
                 var bytes = new Uint8Array(await file.arrayBuffer())
                 let content = await extractTextFromPDF(bytes)
-                console.log(content)
-                // let tablePart = cutStringBoundaryExcluded(content, '本期账务明细 Transaction Details', '招商银行信用卡对账单')
-                // console.log(tablePart)
-                // setRawText(tablePart)
+                let tablePart = cutStringBoundaryExcluded(content, 'Counter Party')
+                setRawText(tablePart)
             } else {
                 alert('Only support PDF file')
             }
@@ -74,7 +62,7 @@ export default function CMBCreditPage() {
     }
 
     return (
-        <NoSSR>
+        <div>
             <div className='container mx-auto h-[100vh] p-4'>
                 <div className="flex items-center pb-4">
                     <span className="text-2xl pr-8">Upload PDF: </span>
@@ -89,13 +77,6 @@ export default function CMBCreditPage() {
                     <input type="text" placeholder="Type here" className="input input-sm input-bordered input-primary w-full max-w-xs"
                         value={accountName}
                         onChange={(e) => { setAccountName(e.target.value) }}
-                    />
-                </div>
-                <div className="flex items-center pb-2">
-                    <span className="text-2xl pr-8">Year of Statements:</span>
-                    <input type="text" placeholder="Type here" className="input input-sm input-bordered input-primary w-full max-w-xs"
-                        value={year}
-                        onChange={(e) => { setYear(e.target.value) }}
                     />
                 </div>
                 <div className="flex flex-col pb-4">
@@ -243,6 +224,6 @@ export default function CMBCreditPage() {
                     setRulesModalOpen(false);
                 }}
             ></RuleImportModal>
-        </NoSSR>
+        </div>
     )
 }

@@ -5,7 +5,7 @@ export function parseCMBCreditRawTxn(text: string): CMBCreditRawTxn[] {
 
     const lines = [] as string[]
 
-    for (const [_, line] of text.split('\n').entries()) {
+    for (const [_, line] of text.split(/\r?\n/).entries()) {
         const item = line.trim()
         // drop the empty line
         if (item.trim() === "") {

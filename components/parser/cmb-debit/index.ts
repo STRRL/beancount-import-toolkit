@@ -16,24 +16,26 @@ export type CMBDebitRawTxn = {
 }
 
 
-const txnReg = new RegExp(/^\d{4}-\d{2}-\d{2} CNY [-0-9.,]+ [-0-9.,]+ .*$/)
+const txnReg = new RegExp(/\d{4}-\d{2}-\d{2}\s+CNY\s+[-0-9\.\,]+\s+[-0-9\.\,]+\s+.*$/)
 
 export function parseCMBRawTxn(text: string): CMBDebitRawTxn[] {
     const result = [] as CMBDebitRawTxn[]
     // compose multiline txn to one-line txn
     const lines = [] as string[]
     let line = "";
-    for (const [index, item] of text.split('\n').entries()) {
-        const match = txnReg.test(item)
+    const splitted = text.split(/\r?\n/)
+    for (const [index, item] of splitted.entries()) {
+        const trimmed = item.trim()
+        const match = txnReg.test(trimmed)
         if (match) {
             if (line) {
                 lines.push(line)
             }
-            line = item
+            line = trimmed
         } else {
-            line += item
+            line += trimmed
         }
-        if (index === text.split('\n').length - 1) {
+        if (index === splitted.length - 1) {
             if (line) {
                 lines.push(line)
             }
@@ -75,8 +77,7 @@ export function cmbDebitRawTxn2Txn(rawTxn: CMBDebitRawTxn, cmbAccountName: strin
     if (rules) {
         for (const rule of rules) {
             if (ruleMatch(rule, txn)) {
-                txn = ruleApply(rule, txn)
-                break
+                return ruleApply(rule, txn)
             }
         }
     }
