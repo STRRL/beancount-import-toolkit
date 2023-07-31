@@ -78,7 +78,6 @@ export default function CMBCreditPage() {
                     "本期账务明细 Transaction Details",
                     "招商银行信用卡对账单"
                 );
-                console.log(tablePart);
                 setRawText(tablePart);
             } else {
                 alert("Only support PDF file");
@@ -88,9 +87,9 @@ export default function CMBCreditPage() {
 
     return (
         <>
-            <div className="container mx-auto h-[100vh] p-4">
+            <div className="container mx-auto h-[80vh] p-4">
                 <div className="flex items-center pb-4">
-                    <span className="text-2xl pr-8">Upload PDF: </span>
+                    <span className="text-2xl pr-8">Select PDF: </span>
                     <div>
                         <input
                             type="file"
@@ -275,7 +274,7 @@ export default function CMBCreditPage() {
                 <div className="">
                     <p className="text-2xl pb-4">Generated Beancount Preview:</p>
                     <textarea
-                        className="h-[40vh] w-full textarea textarea-primary"
+                        className="h-[20vh] w-full textarea textarea-primary"
                         readOnly
                         value={renderedBeancounts}
                     ></textarea>

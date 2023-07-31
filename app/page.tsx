@@ -12,13 +12,13 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main className='container mx-auto h-screen p-12'>
-                <div className='pb-24'>
+            <main className='container mx-auto p-12'>
+                <div className='pb-24 text-3xl'>
                     <p>
                         Import Transactions to Beancount
                     </p>
                 </div>
-                <div className='pb-24'>
+                <div className='pb-24 text-xl'>
                     <p>
                         Your transaction data is never sent to any server.
                     </p>
@@ -27,7 +27,7 @@ export default function Home() {
                     </p>
                 </div>
 
-                <div className='pb-24 flex place-content-center'>
+                <div className='btn btn-primary flex place-content-center'>
                     <Link href="/sources">
                         <p >I know it. Move on! 🚀 </p>
                     </Link>

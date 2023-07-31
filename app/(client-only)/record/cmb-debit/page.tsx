@@ -63,9 +63,9 @@ export default function CMBDebitPage() {
 
     return (
         <div>
-            <div className='container mx-auto h-[100vh] p-4'>
+            <div className='container mx-auto h-[80vh] p-4'>
                 <div className="flex items-center pb-4">
-                    <span className="text-2xl pr-8">Upload PDF: </span>
+                    <span className="text-2xl pr-8">Select PDF: </span>
                     <div >
                         <input type="file" className="file-input file-input-sm file-input-primary w-full max-w-xs"
                             onChange={(e) => { loadFile(e) }}
@@ -180,7 +180,7 @@ export default function CMBDebitPage() {
                 </div>
                 <div className="">
                     <p className="text-2xl pb-4">Generated Beancount Preview:</p>
-                    <textarea className="h-[40vh] w-full textarea textarea-primary"
+                    <textarea className="h-[20vh] w-full textarea textarea-primary"
                         readOnly
                         value={renderedBeancounts}
                     ></textarea>
